@@ -3,7 +3,7 @@
 import * as scripts from './cli';
 
 (async () => {
-    await scripts.SendBatchTx();
+    await scripts.embeddedGenesis();
 
     process.exit(0);
 })().catch((err) => {

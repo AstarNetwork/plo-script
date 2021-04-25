@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import BigNumber from 'bignumber.js';
 import { H256 } from '@polkadot/types/interfaces';
 import * as polkadotUtilCrypto from '@polkadot/util-crypto';

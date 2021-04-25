@@ -9,7 +9,7 @@ export async function fetchPlasmEvents(
     displayRow: number,
     fetchType: 'all' | 'single-page',
 ) {
-    async function fetchEventPage(module: string, call: string, displayRow: number, pageNo: number = 0) {
+    async function fetchEventPage(module: string, call: string, displayRow: number, pageNo = 0) {
         const apiParam = {
             row: displayRow,
             page: pageNo,

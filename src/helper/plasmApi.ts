@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import BigNumber from 'bignumber.js';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Vec } from '@polkadot/types';
