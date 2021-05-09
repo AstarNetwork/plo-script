@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace SubscanApi {
+    export type Module = 'parachain';
     export type Query = 'bids' | 'contributes';
     export type Response = {
         code: number;
@@ -29,7 +30,7 @@ export declare namespace SubscanApi {
         auction_index?: number;
         bid_id?: string;
         fund_id?: string;
-        para_id?: string;
+        para_id?: number;
         from_block?: number;
         to_block?: number;
         status?: number;

@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import axios from 'axios';
 import neatCsv from 'neat-csv';
 import fs from 'fs';
 import stringify from 'csv-stringify/lib/sync';
@@ -15,13 +16,12 @@ export async function getJsonRequest(url: string) {
 }
 
 export async function postJsonRequest(url: string, body: object) {
-    const response = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(body),
+    console.log('post:', url, JSON.stringify(body));
+    const response = await axios.post(url, body, {
         headers: { 'Content-Type': 'application/json' },
     });
-    const json = await response.json();
-    return JSON.stringify(json);
+    console.log('response:', response);
+    return response.data;
 }
 
 /**

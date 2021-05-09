@@ -7,20 +7,28 @@ import { fromBids, fromContributes, Participant } from '../model/Paritcipant';
 export type Endpoint = {
     plasm: string;
     relay: string;
+    auction_index: number;
+    para_id: number;
 };
 
 export const SUBSCAN_ENDPOINTS = {
     rococo: {
         plasm: 'https://dusty.subscan.io/api/scan',
         relay: 'https://rococo.api.subscan.io/api/scan',
+        auction_index: 1,
+        para_id: 5000,
     },
     kusama: {
         plasm: 'https://shiden.subscan.io/api/scan',
         relay: 'https://kusama.api.subscan.io/api/scan',
+        auction_index: 1,
+        para_id: 5000,
     },
     polkadot: {
         plasm: 'https://plasm.subscan.io/api/scan',
         relay: 'https://polkadot.api.subscan.io/api/scan',
+        auction_index: 1,
+        para_id: 5000,
     },
 } as { [key: string]: Endpoint };
 
@@ -32,13 +40,15 @@ export const eventConvert = {
 export const subscanEndpoints = SUBSCAN_ENDPOINTS[process.env.NETWORK ?? 'rococo'];
 
 export async function fetchPlasmEvents(
-    module: string,
+    module: SubscanApi.Module,
     query: SubscanApi.Query,
     displayRow: number,
     payload: SubscanApi.Payload,
     fetchType: 'all' | 'single-page',
+    flush?: boolean,
 ): Promise<Participant[]> {
     const api = `${subscanEndpoints.relay}/${module}/${query}`;
+    console.log('api:', api, flush);
 
     const fetchEventPage = async (
         api: string,
@@ -52,8 +62,11 @@ export async function fetchPlasmEvents(
             page,
             ...payload,
         } as SubscanApi.Payload & SubscanApi.Pagination;
+        console.log('fetch:', apiParam);
         const res = await postJsonRequest(api, apiParam);
+        console.log(`res:`, res);
         const logs: SubscanApi.Response = JSON.parse(res);
+        if (flush) console.log(`logs[page=${page}]:`, logs);
         if (logs.code !== 0) {
             throw new Error(logs.message);
         }
@@ -61,6 +74,7 @@ export async function fetchPlasmEvents(
     };
 
     let res = await fetchEventPage(api, query, payload);
+    if (flush) console.log('res[page=0]:', res);
     if (fetchType === 'all') {
         let results: SubscanApi.Event[] = [];
         let page = 1;
@@ -68,6 +82,7 @@ export async function fetchPlasmEvents(
             await sleep(3000); // 3s sleep
             results = results.concat(res);
             res = await fetchEventPage(api, query, payload, page++);
+            if (flush) console.log(`res[page=${page - 1}]:`, res);
         }
         return eventConvert[query](results);
     }
