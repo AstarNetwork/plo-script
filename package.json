@@ -5,13 +5,18 @@
     "main": "src/index.ts",
     "scripts": {
         "start": "ts-node-dev -r dotenv/config src/index.ts",
+        "build": "tsc",
         "test": "echo \"Error: no test specified\" && exit 1",
         "fetch:eth-test": "ts-node -r dotenv/config src/cli/cacheLockEvents.ts ropsten",
         "fetch:eth-main": "ts-node -r dotenv/config src/cli/cacheLockEvents.ts mainnet",
         "fetch:claims": "ts-node -r dotenv/config src/cli/cacheClaimEvents.ts",
         "fetch:all": "yarn run fetch:eth-test && yarn run fetch:eth-main && yarn run fetch:claims",
-        "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
-        "fix": "eslint --ext .js,.jsx,.ts,.tsx ./src --fix"
+        "lint": "run-p -l -c --aggregate-output lint:*",
+        "lint:eslint": "eslint src",
+        "lint:prettier": "prettier --check src",
+        "fix": "run-s fix:prettier fix:eslint",
+        "fix:eslint": "npm run lint:eslint -- --fix src",
+        "fix:prettier": "npm run lint:prettier -- --write src"
     },
     "license": "MIT",
     "devDependencies": {
@@ -20,10 +25,11 @@
         "@types/node-fetch": "^2.5.7",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
-        "dotenv": "^8.2.0",
+        "dotenv": "^9.0.1",
         "eslint": "^7.25.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^3.4.0",
+        "npm-run-all": "^4.1.5",
         "prettier": "^2.1.2",
         "ts-node": "^9.0.0",
         "ts-node-dev": "^1.0.0-pre.63",

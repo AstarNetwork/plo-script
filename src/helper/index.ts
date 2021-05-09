@@ -1,4 +1,3 @@
-export * as PlasmEventScan from './plasmEventScan';
 export * as Utils from './utils';
 export * as PlasmUtils from './plasmUtils';
 export { default } from './plasmApi';

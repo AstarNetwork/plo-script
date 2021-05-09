@@ -1,55 +1,75 @@
+import fetch from 'node-fetch';
 import { SubscanApi } from '../model/SubscanTypes';
 import { postJsonRequest } from './utils';
+import { setTimeout as sleep } from 'timers/promises';
+import { fromBids, fromContributes, Participant } from '../model/Paritcipant';
 
-const SUBSCAN_ENDPOINT = 'https://plasm.subscan.io/api/scan/events';
+export type Endpoint = {
+    plasm: string;
+    relay: string;
+};
+
+export const SUBSCAN_ENDPOINTS = {
+    rococo: {
+        plasm: 'https://dusty.subscan.io/api/scan',
+        relay: 'https://rococo.api.subscan.io/api/scan',
+    },
+    kusama: {
+        plasm: 'https://shiden.subscan.io/api/scan',
+        relay: 'https://kusama.api.subscan.io/api/scan',
+    },
+    polkadot: {
+        plasm: 'https://plasm.subscan.io/api/scan',
+        relay: 'https://polkadot.api.subscan.io/api/scan',
+    },
+} as { [key: string]: Endpoint };
+
+export const eventConvert = {
+    bids: fromBids,
+    contributes: fromContributes,
+} as { [key: string]: (event: SubscanApi.Event[]) => Participant[] };
+
+export const subscanEndpoints = SUBSCAN_ENDPOINTS[process.env.NETWORK ?? 'rococo'];
 
 export async function fetchPlasmEvents(
     module: string,
-    call: string,
+    query: SubscanApi.Query,
     displayRow: number,
+    payload: SubscanApi.Payload,
     fetchType: 'all' | 'single-page',
-) {
-    async function fetchEventPage(module: string, call: string, displayRow: number, pageNo = 0) {
+): Promise<Participant[]> {
+    const api = `${subscanEndpoints.relay}/${module}/${query}`;
+
+    const fetchEventPage = async (
+        api: string,
+        query: SubscanApi.Query,
+        payload: SubscanApi.Payload,
+        page = 0,
+        row = displayRow,
+    ): Promise<SubscanApi.Event[]> => {
         const apiParam = {
-            row: displayRow,
-            page: pageNo,
-            module,
-            call,
-        };
-
-        const res = await postJsonRequest(SUBSCAN_ENDPOINT, apiParam);
+            row,
+            page,
+            ...payload,
+        } as SubscanApi.Payload & SubscanApi.Pagination;
+        const res = await postJsonRequest(api, apiParam);
         const logs: SubscanApi.Response = JSON.parse(res);
-
         if (logs.code !== 0) {
             throw new Error(logs.message);
         }
-        return logs.data;
-    }
+        return logs.data[query] || [];
+    };
 
-    const eventResponse = await fetchEventPage(module, call, displayRow);
-
-    let events = eventResponse.events;
-
+    let res = await fetchEventPage(api, query, payload);
     if (fetchType === 'all') {
-        // we can simply truncate the value because the page number is zero-indexed
-        const _totalPageCount = Math.trunc(eventResponse.count / displayRow);
-
-        // we start from 1 because we already fetched once
-        for (let i = 1; i <= _totalPageCount; i++) {
-            const _eventData = await fetchEventPage(module, call, displayRow, i);
-            //console.log(i);
-            events = events.concat(_eventData.events);
+        let results: SubscanApi.Event[] = [];
+        let page = 1;
+        while (res.length) {
+            await sleep(3000); // 3s sleep
+            results = results.concat(res);
+            res = await fetchEventPage(api, query, payload, page++);
         }
+        return eventConvert[query](results);
     }
-
-    const allEvents = events.map((ev: any) => {
-        // params is returned as a json string, so we explicitly convert that to an object
-        const params = JSON.parse(ev.params) as SubscanApi.EventParam[];
-        return {
-            ...ev,
-            params,
-        } as SubscanApi.Event;
-    });
-
-    return allEvents;
+    return eventConvert[query](res);
 }
