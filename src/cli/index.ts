@@ -1,5 +1,3 @@
-import { fromPairs } from 'lodash';
-
 export { default as fetchAuctionEvents } from './fetchAuctionEvents';
 export { default as fetchCrowdloanEvents } from './fetchCrowdloanEvents';
 export { default as fetchSnapshotAccounts } from './fetchSnapshotAccounts';
