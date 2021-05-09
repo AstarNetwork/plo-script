@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { SubscanApi } from '../model/SubscanTypes';
 import { postJsonRequest } from './utils';
-// import { setTimeout as sleep } from 'timers/promises';
+import { setTimeout as sleep } from 'timers/promises';
 import { fromBids, fromContributes, Participant } from '../model/Paritcipant';
 
 export type Endpoint = {
@@ -80,7 +80,7 @@ export async function fetchPlasmEvents(
     let results: SubscanApi.Event[] = [];
     let page = 1;
     while (res.length) {
-      // await sleep(3000); // 3s sleep
+      await sleep(3000); // 3s sleep
       results = results.concat(res);
       res = await fetchEventPage(api, query, payload, page++);
       if (flush) console.log(`res[page=${page - 1}]:`, res);
