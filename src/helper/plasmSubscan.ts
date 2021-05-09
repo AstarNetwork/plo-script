@@ -9,6 +9,7 @@ export type Endpoint = {
   relay: string;
   auction_index: number;
   para_id: number;
+  fund_id: string;
 };
 
 export const SUBSCAN_ENDPOINTS = {
@@ -17,18 +18,21 @@ export const SUBSCAN_ENDPOINTS = {
     relay: 'https://rococo.api.subscan.io/api/scan',
     auction_index: 1,
     para_id: 5000,
+    fund_id: "5000", // fund_index same as para_id: https://github.com/paritytech/polkadot/blob/master/runtime/common/src/crowdloan.rs#L351
   },
   kusama: {
     plasm: 'https://shiden.api.subscan.io/api/scan',
     relay: 'https://kusama.api.subscan.io/api/scan',
     auction_index: 1,
     para_id: 5000,
+    fund_id: "5000",
   },
   polkadot: {
     plasm: 'https://plasm.api.subscan.io/api/scan',
     relay: 'https://polkadot.api.subscan.io/api/scan',
     auction_index: 1,
     para_id: 5000,
+    fund_id: "5000",
   },
 } as { [key: string]: Endpoint };
 
@@ -48,7 +52,6 @@ export async function fetchPlasmEvents(
   flush?: boolean,
 ): Promise<Participant[]> {
   const api = `${subscanEndpoints.relay}/${module}/${query}`;
-  console.log('api:', api, flush);
 
   const fetchEventPage = async (
     api: string,
@@ -62,9 +65,7 @@ export async function fetchPlasmEvents(
       page,
       ...payload,
     } as SubscanApi.Payload & SubscanApi.Pagination;
-    console.log('fetch:', apiParam);
     const res = await postJsonRequest(api, apiParam);
-    console.log(`res:`, res);
     const logs: SubscanApi.Response = JSON.parse(res);
     if (flush) console.log(`logs[page=${page}]:`, logs);
     if (logs.code !== 0) {

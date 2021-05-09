@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import https from 'https';
 import axios from 'axios';
 import neatCsv from 'neat-csv';
@@ -11,30 +10,18 @@ import path from 'path';
  * @param url url of the request in string
  */
 export async function getJsonRequest(url: string) {
-  const response = await fetch(url);
-  const json = await response.json();
-  return JSON.stringify(json);
+  const response = await axios.get(url);
+  return JSON.stringify(response.data);
 }
 
 export async function postJsonRequest(url: string, body: object) {
-  console.log('post:', url, JSON.stringify(body));
-  const test = await fetch('https://rococo.api.subscan.io/api/scan/parachain/bids', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ row: 50, page: 0 }),
-  });
-  console.log('test', test);
   const response = await axios.post(url, body, {
     headers: { 'Content-Type': 'application/json' },
     httpsAgent: new https.Agent({
       rejectUnauthorized: false,
     }),
   });
-  console.log('aaa');
-  console.log('response:', response);
-  return response.data;
+  return JSON.stringify(response.data);
 }
 
 /**

@@ -1,5 +1,4 @@
 #!/usr/bin/env ts-node
-
 import * as scripts from './cli';
 import * as yargs from 'yargs';
 
@@ -13,11 +12,14 @@ const argv = yargs.option('execute', {
   const e = argv.argv.execute;
   switch (e) {
     case 'bids':
-      scripts.fetchAuctionEvents();
+      await scripts.fetchAuctionEvents();
+      break;
     case 'contributes':
-      scripts.fetchCrowdloanEvents();
+      await scripts.fetchCrowdloanEvents();
+      break;
     default:
       await scripts.embeddedGenesis();
+      break;
   }
   process.exit(0);
 })().catch((err) => {

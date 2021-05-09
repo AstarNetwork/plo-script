@@ -6,7 +6,7 @@ const ID_NAME = 'auction';
 // script entry point
 export default async () => {
   // cache names are based on contract address
-  const cacheFileDir = `${path.join(process.cwd(), 'cache/')}cache-${ID_NAME.slice(0, 6)}.json`;
+  const cacheFileDir = `${path.join(process.cwd(), 'report/')}cache-${ID_NAME.slice(0, 6)}.json`;
   const jsonBlob = JSON.stringify('{}');
 
   fs.writeFile(cacheFileDir, jsonBlob, function (err) {
