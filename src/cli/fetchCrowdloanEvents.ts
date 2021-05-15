@@ -1,9 +1,10 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { fetchPlasmEvents, subscanEndpoints } from '../helper/plasmSubscan';
+import { toJSON } from '../model/Paritcipant';
 import { SubscanApi } from '../model/SubscanTypes';
 
-const ID_NAME = 'crowdlaon';
+const ID_NAME = 'crowdloan';
 
 // script entry point
 export default async () => {
@@ -19,7 +20,7 @@ export default async () => {
     'single-page',
     process.env.DEBUG === 'true',
   );
-  const jsonBlob = JSON.stringify(res);
+  const jsonBlob = toJSON(res);
   console.log('write:', cacheFileDir, jsonBlob);
 
   await fs.writeFile(cacheFileDir, jsonBlob);

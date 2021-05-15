@@ -24,14 +24,6 @@ export async function postJsonRequest(url: string, body: object) {
   return JSON.stringify(response.data);
 }
 
-/**
- * wait for the given time. A utility tool used to prevent API spamming
- * @param ms
- */
-export function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export function loadCache<T>(jsonDir: string) {
   try {
     const _cache = fs.readFileSync(jsonDir, { encoding: 'utf8' });
@@ -69,4 +61,12 @@ export function writeCsv<T>(data: T[], name?: string, saveFolder?: string) {
   });
 
   fs.writeFileSync(dirName, csvOutput);
+}
+
+export function promiseMap<T, V>(data: T[], fn: (d: T) => Promise<V>): Promise<V[]> {
+  return Promise.all(
+    data.map((d: T) => {
+      return fn(d);
+    }),
+  );
 }
