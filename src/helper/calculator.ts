@@ -6,6 +6,9 @@ import { ChainType } from '../model/ChainType';
 import { promiseMap } from './utils';
 
 export const calcSDN = (participants: Participant[], param: Parameter): Reward[] => {
+  // filter only contributes.
+  participants = participants.filter((p: Participant) => p.how === 'contributes');
+
   // calc denominator.
   const totalDenominator = participants.reduce((sum: BigNumber, now: Participant) => {
     const index = param.auctionsStarted.findIndex((started: number) => now.blocknumber < started);
