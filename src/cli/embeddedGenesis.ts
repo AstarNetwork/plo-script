@@ -1,7 +1,7 @@
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import path from 'path';
 
-const ID_NAME = 'auction';
+const ID_NAME = 'test';
 
 // script entry point
 export default async () => {
@@ -9,7 +9,5 @@ export default async () => {
   const cacheFileDir = `${path.join(process.cwd(), 'report/')}cache-${ID_NAME.slice(0, 6)}.json`;
   const jsonBlob = JSON.stringify('{}');
 
-  fs.writeFile(cacheFileDir, jsonBlob, function (err) {
-    if (err) return console.error(err);
-  });
+  await fs.writeFile(cacheFileDir, jsonBlob);
 };

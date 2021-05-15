@@ -4,7 +4,7 @@ import * as yargs from 'yargs';
 
 const argv = yargs.option('execute', {
   alias: 'e',
-  choice: ['bids', 'contributes'],
+  choice: ['bids', 'contributes', 'sdn'],
   description: 'kind of execite script',
 });
 
@@ -16,6 +16,9 @@ const argv = yargs.option('execute', {
       break;
     case 'contributes':
       await scripts.fetchCrowdloanEvents();
+      break;
+    case 'sdn':
+      await scripts.calcSDNRewards();
       break;
     default:
       await scripts.embeddedGenesis();
