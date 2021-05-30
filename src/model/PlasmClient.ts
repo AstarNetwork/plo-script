@@ -1,6 +1,6 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { ChainType } from './ChainType';
-import * as plasmDefinitions from '@plasm/types/interfaces/definitions';
+import * as plasmDefinitions from '@plasm/types';
 import { RegistryTypes, ISubmittableResult } from '@polkadot/types/types';
 import BigNumber from 'bignumber.js';
 import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
@@ -19,7 +19,7 @@ const makeEndpoint = (chain: ChainType): string => {
 };
 
 const makePlasmTypes = (): RegistryTypes => {
-  return Object.values(plasmDefinitions).reduce((res, { types }): object => ({ ...res, ...types }), {});
+  return Object.values(plasmDefinitions).reduce((res, types): object => ({ ...res, ...types }), {});
 };
 
 export type VestingConfig = {
