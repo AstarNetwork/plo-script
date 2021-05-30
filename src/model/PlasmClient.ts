@@ -1,6 +1,6 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { ChainType } from './ChainType';
-import * as plasmDefinitions from '@plasm/types';
+import plasmDefinitions from '../type/dusty';
 import { RegistryTypes, ISubmittableResult } from '@polkadot/types/types';
 import BigNumber from 'bignumber.js';
 import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
