@@ -23,7 +23,7 @@ const makePlasmTypes = (): RegistryTypes => {
 };
 
 export type VestingConfig = {
-  preBlock: number;
+  preBlock: string;
   startingBlock: number;
 };
 

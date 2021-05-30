@@ -6,14 +6,13 @@ import { ChainType } from '../model/ChainType';
 import { fromJSON } from '../model/Reward';
 
 const REWARD_JSON_PATH = 'report/cache-reward.json';
-const CHAIN: ChainType = 'kusama';
 
 // script entry point
-export default async () => {
+export default async (chain: ChainType) => {
   // cache names are based on contract address
   const cacheFileDir = path.join(process.cwd(), REWARD_JSON_PATH);
 
   const readJsonBlob = await fs.readFile(cacheFileDir);
   const rewards = fromJSON(readJsonBlob.toString());
-  await batchTransfer(rewards, CHAIN);
+  await batchTransfer(rewards, chain);
 };
