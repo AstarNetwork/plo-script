@@ -2,11 +2,9 @@ import { AddressOrPair } from '@polkadot/api/types';
 import Keyring from '@polkadot/keyring';
 import BigNumber from 'bignumber.js';
 import { ChainType } from '../model/ChainType';
+import { Config } from '../model/Config';
 import PlasmClient, { VestingConfig } from '../model/PlasmClient';
 import { Reward } from '../model/Reward';
-
-// TODO... (to config)
-const PHRASE = 'phrase test...';
 
 const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig => {
   switch (chain) {
@@ -29,7 +27,7 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
 
 const makeKeyring = (): AddressOrPair => {
   const keyring = new Keyring({ type: 'sr25519' });
-  return keyring.addFromUri(PHRASE);
+  return keyring.addFromUri(Config.get().phrase);
 };
 
 export const batchTransfer = async (rewards: Reward[], chain: ChainType) => {
