@@ -40,8 +40,8 @@
     },
     "dependencies": {
         "@plasm/types": "^1.5.4-2",
-        "@polkadot/api": "^4.12.2",
-        "@polkadot/types": "^4.12.2",
+        "@polkadot/api": "4.12.2-9",
+        "@polkadot/types": "4.12.2-9",
         "@polkadot/util": "^6.6.1",
         "@polkadot/util-crypto": "^6.6.1",
         "axios": "^0.21.1",
@@ -55,5 +55,9 @@
         "neat-csv": "^5.2.0",
         "node-fetch": "^2.6.1",
         "yargs": "^17.0.1"
+    },
+    "resolutions": {
+        "@polkadot/api": "4.12.2-9",
+        "@polkadot/types": "4.12.2-9"
     }
 }
