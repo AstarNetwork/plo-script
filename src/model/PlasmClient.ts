@@ -1,6 +1,6 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { ChainType } from './ChainType';
-import plasmDefinitions from '../type/dusty';
+import typeDefs from '@plasm/types';
 import { RegistryTypes, ISubmittableResult } from '@polkadot/types/types';
 import BigNumber from 'bignumber.js';
 import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
@@ -18,8 +18,15 @@ const makeEndpoint = (chain: ChainType): string => {
   }
 };
 
-const makePlasmTypes = (): RegistryTypes => {
-  return Object.values(plasmDefinitions).reduce((res, types): object => ({ ...res, ...types }), {});
+const makePlasmTypes = (chain: ChainType): RegistryTypes => {
+  switch (chain) {
+    case 'rococo':
+      return typeDefs.dustyDefinitions;
+    case 'kusama':
+      return typeDefs.plasmCollatorDefinitions;
+    case 'polkadot':
+      return typeDefs.plasmDefinitions;
+  }
 };
 
 export type VestingConfig = {
@@ -31,6 +38,7 @@ export default class PlasmClient {
   private _provider: WsProvider;
   private _account: AddressOrPair;
   private _api: ApiPromise | undefined;
+  private _chain: ChainType;
 
   constructor(chain: ChainType, account: AddressOrPair) {
     this._provider = new WsProvider(makeEndpoint(chain), AUTO_CONNECT_MS);
@@ -38,7 +46,7 @@ export default class PlasmClient {
   }
 
   public async setup() {
-    const types = makePlasmTypes();
+    const types = makePlasmTypes(this._chain);
     this._api = await ApiPromise.create({
       provider: this._provider,
       types: {
