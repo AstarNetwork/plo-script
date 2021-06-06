@@ -8,7 +8,9 @@ Parachain Lease Offering fees are distributed according to the logic of this scr
 - `config/config.json`: Specifies the mnemonic phrase of the user who will run the deployment and the file in which to save it.
 - `config/subscan.json`: Set the parameters to use when hitting the Subscan API here, such as AuctionId, ParaId, fundId, etc.
 - `src/model/Reward.ts`: Write the parameters to calculate the reward.
-$$ SDN_{a,b} = \frac{KSM_{a,b}C_a}{\sum_{i=0}^{n}{\sum_{j=0}^{m_i}KSM_{i,j}C_i}}\times6,750,000 $$
+
+`SDN_{a,b} = \frac{KSM_{a,b}C_a}{\sum_{i=0}^{n}{\sum_{j=0}^{m_i}KSM_{i,j}C_i}}\times6,750,000`
+
 For example:
 ```ts
 export const SDNCrowdloanParameter: Parameter = {
