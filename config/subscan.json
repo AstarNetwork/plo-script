@@ -1,0 +1,24 @@
+{
+  "rococo": {
+    "plasm": "https://dusty.api.subscan.io/api/scan",
+    "relay": "https://rococo.api.subscan.io/api/scan",
+    "auction_index": 1,
+    "para_id": 5000,
+    "//": "fund_index same as para_id: https://github.com/paritytech/polkadot/blob/master/runtime/common/src/crowdloan.rs#L351",
+    "fund_id": "5000"
+  },
+  "kusama": {
+    "plasm": "https://shiden.api.subscan.io/api/scan",
+    "relay": "https://kusama.api.subscan.io/api/scan",
+    "auction_index": 1,
+    "para_id": 5000,
+    "fund_id": "5000"
+  },
+  "polkadot": {
+    "plasm": "https://plasm.api.subscan.io/api/scan",
+    "relay": "https://polkadot.api.subscan.io/api/scan",
+    "auction_index": 1,
+    "para_id": 5000,
+    "fund_id": "5000"
+  }
+}
