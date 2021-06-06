@@ -1,8 +1,9 @@
-import fetch from 'node-fetch';
 import { SubscanApi } from '../model/SubscanTypes';
 import { postJsonRequest } from './utils';
 import { setTimeout as sleep } from 'timers/promises';
 import { fromBids, fromContributes, Participant } from '../model/Paritcipant';
+import { Config } from '../model/Config';
+import subscanJson from '../../config/subscan.json';
 
 export type Endpoint = {
   plasm: string;
@@ -12,36 +13,14 @@ export type Endpoint = {
   fund_id: string;
 };
 
-export const SUBSCAN_ENDPOINTS = {
-  rococo: {
-    plasm: 'https://dusty.api.subscan.io/api/scan',
-    relay: 'https://rococo.api.subscan.io/api/scan',
-    auction_index: 1,
-    para_id: 5000,
-    fund_id: '5000', // fund_index same as para_id: https://github.com/paritytech/polkadot/blob/master/runtime/common/src/crowdloan.rs#L351
-  },
-  kusama: {
-    plasm: 'https://shiden.api.subscan.io/api/scan',
-    relay: 'https://kusama.api.subscan.io/api/scan',
-    auction_index: 1,
-    para_id: 5000,
-    fund_id: '5000',
-  },
-  polkadot: {
-    plasm: 'https://plasm.api.subscan.io/api/scan',
-    relay: 'https://polkadot.api.subscan.io/api/scan',
-    auction_index: 1,
-    para_id: 5000,
-    fund_id: '5000',
-  },
-} as { [key: string]: Endpoint };
+export const SUBSCAN_ENDPOINTS = subscanJson as { [key: string]: Endpoint };
 
 export const eventConvert = {
   bids: fromBids,
   contributes: fromContributes,
 } as { [key: string]: (event: SubscanApi.Event[]) => Participant[] };
 
-export const subscanEndpoints = SUBSCAN_ENDPOINTS[process.env.NETWORK ?? 'rococo'];
+export const subscanEndpoints = SUBSCAN_ENDPOINTS[Config.chainType];
 
 export async function fetchPlasmEvents(
   module: SubscanApi.Module,

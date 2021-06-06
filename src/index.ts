@@ -2,11 +2,12 @@
 import * as scripts from './cli';
 import * as yargs from 'yargs';
 import { ChainType } from './model/ChainType';
+import { Config } from './model/Config';
 
 const argv = yargs
   .option('execute', {
     alias: 'e',
-    choice: ['bids', 'contributes', 'reward', 'transfer'],
+    choice: ['auction', 'crowdloan', 'rewards', 'transfer'],
     description: 'kind of execite script',
   })
   .option('chain', {
@@ -16,17 +17,21 @@ const argv = yargs
   });
 
 (async () => {
-  const chain = argv.argv.network as ChainType;
+  const chain = argv.argv.chain as ChainType;
+  // set global config.
+  Config.setChain(chain);
   const e = argv.argv.execute;
   switch (e) {
-    case 'bids':
+    case 'auction':
       await scripts.fetchAuctionEvents();
       break;
-    case 'contributes':
+    case 'crowdloan':
       await scripts.fetchCrowdloanEvents();
       break;
-    case 'reward':
-      switch (chain) {
+    case 'rewards':
+      switch (Config.chainType) {
+        case 'rococo':
+          await scripts.calcSDNRewards();
         case 'kusama':
           await scripts.calcSDNRewards();
         default:
@@ -34,7 +39,7 @@ const argv = yargs
       }
       break;
     case 'transfer':
-      await scripts.vestedTransfer(chain);
+      await scripts.vestedTransfer();
     default:
       await scripts.embeddedGenesis();
       break;

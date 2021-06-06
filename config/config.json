@@ -1,3 +1,20 @@
 {
-  "phrase": "Mnemonic Phrase..."
+  "rococo": {
+    "phrase": "Mnemonic Phrase...",
+    "auctionJSONPath": "report/cache-rococo-auction.json",
+    "crowdloanJSONPath": "report/cache-rococo-crowdloan.json",
+    "rewardsJSONPath": "report/cache-rococo-rewards.json"
+  },
+  "kusama": {
+    "phrase": "Mnemonic Phrase...",
+    "auctionJSONPath": "report/cache-kusama-auction.json",
+    "crowdloanJSONPath": "report/cache-kusama-crowdloan.json",
+    "rewardsJSONPath": "report/cache-kusama-rewards.json"
+  },
+  "polkadot": {
+    "phrase": "Mnemonic Phrase...",
+    "auctionJSONPath": "report/cache-polkadot-auction.json",
+    "crowdloanJSONPath": "report/cache-polkadot-crowdloan.json",
+    "rewardsJSONPath": "report/cache-polkadot-rewards.json"
+  }
 }
