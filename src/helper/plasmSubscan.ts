@@ -3,6 +3,7 @@ import { SubscanApi } from '../model/SubscanTypes';
 import { postJsonRequest } from './utils';
 import { setTimeout as sleep } from 'timers/promises';
 import { fromBids, fromContributes, Participant } from '../model/Paritcipant';
+import { Config } from '../model/Config';
 
 export type Endpoint = {
   plasm: string;
@@ -41,7 +42,7 @@ export const eventConvert = {
   contributes: fromContributes,
 } as { [key: string]: (event: SubscanApi.Event[]) => Participant[] };
 
-export const subscanEndpoints = SUBSCAN_ENDPOINTS[process.env.NETWORK ?? 'rococo'];
+export const subscanEndpoints = SUBSCAN_ENDPOINTS[Config.chainType];
 
 export async function fetchPlasmEvents(
   module: SubscanApi.Module,

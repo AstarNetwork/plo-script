@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { ChainType } from './ChainType';
-import config from '../../config/config.json';
 const PATH = 'config/config.json';
 
 export class Config {
@@ -13,18 +12,14 @@ export class Config {
   public rewardsJSONPath: string;
   private constructor() {
     const jsonObj = JSON.parse(fs.readFileSync(PATH).toString());
-
-    for (const key of Object.keys(this)) {
+    for (const key of Object.keys(jsonObj[Config.chainType])) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if (this.hasOwnProperty(key) && typeof (this as any)[key] === 'string') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (this as any)[key] = jsonObj[Config.chainType][key];
-      }
+      (this as any)[key] = jsonObj[Config.chainType][key];
     }
   }
 
-  static setChain(chain: ChainType) {
-    if (Config.chainType !== chain) {
+  static setChain(chain?: ChainType) {
+    if (chain && Config.chainType !== chain) {
       Config.chainType = chain;
       Config.instance = new Config();
     }

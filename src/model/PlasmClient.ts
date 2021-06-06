@@ -1,6 +1,7 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { ChainType } from './ChainType';
-import typeDefs from '@plasm/types';
+// import typeDefs from '@plasm/types';
+import plasmDefinitions from '../type/types';
 import { RegistryTypes, ISubmittableResult } from '@polkadot/types/types';
 import BigNumber from 'bignumber.js';
 import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
@@ -19,14 +20,15 @@ const makeEndpoint = (chain: ChainType): string => {
 };
 
 const makePlasmTypes = (chain: ChainType): RegistryTypes => {
-  switch (chain) {
-    case 'rococo':
-      return typeDefs.dustyDefinitions;
-    case 'kusama':
-      return typeDefs.plasmCollatorDefinitions;
-    case 'polkadot':
-      return typeDefs.plasmDefinitions;
-  }
+  return Object.values(plasmDefinitions).reduce((res, types): object => ({ ...res, ...types }), {});
+  // switch (chain) {
+  //   case 'rococo':
+  //     return typeDefs.dustyDefinitions;
+  //   case 'kusama':
+  //     return typeDefs.plasmCollatorDefinitions;
+  //   case 'polkadot':
+  //     return typeDefs.plasmDefinitions;
+  // }
 };
 
 export type VestingConfig = {
