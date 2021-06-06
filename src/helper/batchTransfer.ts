@@ -30,10 +30,10 @@ const makeKeyring = (): AddressOrPair => {
   return keyring.addFromUri(Config.get().phrase);
 };
 
-export const batchTransfer = async (rewards: Reward[], chain: ChainType) => {
-  const client = new PlasmClient(chain, makeKeyring());
+export const batchTransfer = async (rewards: Reward[]) => {
+  const client = new PlasmClient(Config.chainType, makeKeyring());
   const txs = rewards.map((reward) =>
-    client.vestedTransfer(reward.account_id, reward.amount, makeVestedConfig(chain, reward.amount)),
+    client.vestedTransfer(reward.account_id, reward.amount, makeVestedConfig(Config.chainType, reward.amount)),
   );
   const batchTx = client.batch(txs);
   const result = await client.signAndSend(batchTx);

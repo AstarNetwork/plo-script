@@ -1,15 +1,14 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { fetchPlasmEvents, subscanEndpoints } from '../helper/plasmSubscan';
+import { Config } from '../model/Config';
 import { toJSON } from '../model/Paritcipant';
 import { SubscanApi } from '../model/SubscanTypes';
-
-const ID_NAME = 'crowdloan';
 
 // script entry point
 export default async () => {
   // cache names are based on contract address
-  const cacheFileDir = `${path.join(process.cwd(), 'report/')}cache-${ID_NAME}.json`;
+  const cacheFileDir = path.join(process.cwd(), Config.get().crowdloanJSONPath);
   const res = await fetchPlasmEvents(
     'parachain',
     'contributes',
