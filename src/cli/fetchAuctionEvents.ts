@@ -14,8 +14,8 @@ export default async () => {
     'bids',
     50,
     {
-      auction_index: subscanEndpoints.auction_index,
-      para_id: subscanEndpoints.para_id,
+      auction_index: subscanEndpoints().auction_index,
+      para_id: subscanEndpoints().para_id,
     } as SubscanApi.EventBidsPayload,
     'single-page',
     process.env.DEBUG === 'true',

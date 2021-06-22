@@ -15,8 +15,9 @@ export async function getJsonRequest(url: string) {
 }
 
 export async function postJsonRequest(url: string, body: object) {
+  console.log('url:', url, 'body:', body);
   const response = await axios.post(url, body, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'X-API-Key': process.env.SUBSCAN_API_CODE },
     httpsAgent: new https.Agent({
       rejectUnauthorized: false,
     }),
