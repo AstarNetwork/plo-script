@@ -20,7 +20,7 @@ export const eventConvert = {
   contributes: fromContributes,
 } as { [key: string]: (event: SubscanApi.Event[]) => Participant[] };
 
-export const subscanEndpoints = SUBSCAN_ENDPOINTS[Config.chainType];
+export const subscanEndpoints = () => SUBSCAN_ENDPOINTS[Config.chainType];
 
 export async function fetchPlasmEvents(
   module: SubscanApi.Module,
@@ -30,7 +30,7 @@ export async function fetchPlasmEvents(
   fetchType: 'all' | 'single-page',
   flush?: boolean,
 ): Promise<Participant[]> {
-  const api = `${subscanEndpoints.relay}/${module}/${query}`;
+  const api = `${subscanEndpoints().relay}/${module}/${query}`;
 
   const fetchEventPage = async (
     api: string,

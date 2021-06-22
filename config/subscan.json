@@ -10,9 +10,9 @@
   "kusama": {
     "plasm": "https://shiden.api.subscan.io/api/scan",
     "relay": "https://kusama.api.subscan.io/api/scan",
-    "auction_index": 1,
-    "para_id": 5000,
-    "fund_id": "5000"
+    "auction_index": 0,
+    "para_id": 2007,
+    "fund_id": "2007-0"
   },
   "polkadot": {
     "plasm": "https://plasm.api.subscan.io/api/scan",

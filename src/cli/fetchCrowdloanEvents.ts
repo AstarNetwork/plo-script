@@ -14,7 +14,7 @@ export default async () => {
     'contributes',
     50,
     {
-      fund_id: subscanEndpoints.fund_id,
+      fund_id: subscanEndpoints().fund_id,
     } as SubscanApi.EventContributesPayload,
     'single-page',
     process.env.DEBUG === 'true',
