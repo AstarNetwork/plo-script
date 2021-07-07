@@ -26,7 +26,7 @@ export const SDNCrowdloanParameter: Parameter = {
   // 3rd end: https://kusama.subscan.io/auction/3 (won)
   auctionsStarted: [8023773, 8123989, 8224041],
   contributeCofficient: [6, 5, 4, 0], // same as C[i]
-  supply: 15400000, // 22% of total supply
+  supply: 1400000, // 20% of total supply
 };
 
 export const toJSON = (rs: Reward[]): string => {
