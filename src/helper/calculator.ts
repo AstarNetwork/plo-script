@@ -22,7 +22,7 @@ export const calcSDN = (participants: Participant[], param: Parameter): Reward[]
     const c = param.contributeCofficient[index];
     return {
       account_id: p.account_id,
-      amount: p.amount.times(c).div(totalDenominator).times(param.supply),
+      amount: p.amount.times(c).times(param.supply).div(totalDenominator).dp(18, BigNumber.ROUND_FLOOR),
     } as Reward;
   });
 };

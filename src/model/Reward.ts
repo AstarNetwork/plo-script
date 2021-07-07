@@ -21,9 +21,12 @@ export type Parameter = {
 // SDN_{a,b} = \frac{KSM_{a,b}C_a}{\sum_{i=0}^{n}{\sum_{j=0}^{m_i}KSM_{i,j}C_i}}\times6,750,000
 export const SDNCrowdloanParameter: Parameter = {
   started: 0,
-  auctionsStarted: [200000, 300000, 400000], // TODO: after won.
-  contributeCofficient: [6, 5, 4], // TODO: same as C[i]
-  supply: 6750000, // 15% of total supply
+  // 1st end: https://kusama.subscan.io/auction/1
+  // 2nd end: https://kusama.subscan.io/auction/2
+  // 3rd end: https://kusama.subscan.io/auction/3 (won)
+  auctionsStarted: [8023773, 8123989, 8224041],
+  contributeCofficient: [6, 5, 4, 0], // same as C[i]
+  supply: 14000000, // 20% of total supply
 };
 
 export const toJSON = (rs: Reward[]): string => {

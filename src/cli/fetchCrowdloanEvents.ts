@@ -16,7 +16,7 @@ export default async () => {
     {
       fund_id: subscanEndpoints().fund_id,
     } as SubscanApi.EventContributesPayload,
-    'single-page',
+    'all',
     process.env.DEBUG === 'true',
   );
   const jsonBlob = toJSON(res);

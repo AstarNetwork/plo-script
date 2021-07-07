@@ -55,6 +55,7 @@ export async function fetchPlasmEvents(
 
   let res = await fetchEventPage(api, query, payload);
   if (flush) console.log('res[page=0]:', res);
+  console.info(`fetched res[page=0].`);
   if (fetchType === 'all') {
     let results: SubscanApi.Event[] = [];
     let page = 1;
@@ -63,6 +64,7 @@ export async function fetchPlasmEvents(
       results = results.concat(res);
       res = await fetchEventPage(api, query, payload, page++);
       if (flush) console.log(`res[page=${page - 1}]:`, res);
+      console.info(`fetched res[page=${page - 1}].`);
     }
     return eventConvert[query](results);
   }
