@@ -30,6 +30,7 @@ const makePlasmTypes = (chain: ChainType): RegistryTypes => {
 };
 
 export type VestingConfig = {
+  srcAddress: string;
   preBlock: string;
   startingBlock: number;
 };
@@ -65,17 +66,23 @@ export default class PlasmClient {
   }
 
   public vestedTransfer(
-    address: string,
+    dest: string,
     balance: BigNumber,
     vestingConfig: VestingConfig,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    const ret = this._api?.tx.vesting.vestedTransfer(address, {
+    const ret = this._api?.tx.vesting.forceVestedTransfer(vestingConfig.srcAddress, dest, {
       locked: balance,
       perBlock: vestingConfig.preBlock,
       startingBlock: vestingConfig.startingBlock,
     });
     if (ret) return ret;
     throw 'Undefined vested transfe';
+  }
+
+  public sudo(tx: SubmittableExtrinsic<'promise', ISubmittableResult>) {
+    const ret = this._api?.tx.sudo.sudo(tx);
+    if (ret) return ret;
+    throw 'Undefined sudo';
   }
 
   public async signAndSend(tx: SubmittableExtrinsic<'promise', ISubmittableResult>) {

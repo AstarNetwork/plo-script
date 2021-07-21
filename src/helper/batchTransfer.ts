@@ -14,12 +14,14 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
       // so 9 month = 3628800 blocks
       // 1 month = 403200 blocks
       return {
+        srcAddress: 'Address',
         preBlock: reward.div(3628800).toFixed().toString(),
         startingBlock: 3628800,
       };
   }
 
   return {
+    srcAddress: '',
     preBlock: '0',
     startingBlock: 1,
   };
@@ -35,7 +37,7 @@ export const batchTransfer = async (rewards: Reward[]) => {
   const txs = rewards.map((reward) =>
     client.vestedTransfer(reward.account_id, reward.amount, makeVestedConfig(Config.chainType, reward.amount)),
   );
-  const batchTx = client.batch(txs);
+  const batchTx = client.sudo(client.batch(txs));
   const result = await client.signAndSend(batchTx);
   console.log('finished batch result:', result);
 };
