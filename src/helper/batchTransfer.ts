@@ -1,5 +1,6 @@
 import { AddressOrPair } from '@polkadot/api/types';
-import Keyring from '@polkadot/keyring';
+import { Keyring } from '@polkadot/api';
+import { waitReady } from '@polkadot/wasm-crypto';
 import BigNumber from 'bignumber.js';
 import { ChainType } from '../model/ChainType';
 import { Config } from '../model/Config';
@@ -33,7 +34,12 @@ const makeKeyring = (): AddressOrPair => {
 };
 
 export const batchTransfer = async (rewards: Reward[]) => {
+  await waitReady();
+  console.log('batchTransfer!');
   const client = new PlasmClient(Config.chainType, makeKeyring());
+  console.log('client0:', client);
+  await client.setup();
+  console.log('client1:', client);
   const txs = rewards.map((reward) =>
     client.vestedTransfer(reward.account_id, reward.amount, makeVestedConfig(Config.chainType, reward.amount)),
   );
