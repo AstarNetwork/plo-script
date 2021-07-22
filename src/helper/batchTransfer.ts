@@ -14,17 +14,17 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
       // so 9 month = 3628800 blocks
       // 1 month = 403200 blocks
       return {
-        srcAddress: 'Address',
-        preBlock: reward.div(3628800).toFixed().toString(),
+        srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
+        perBlock: reward.div(3628800).toFixed().toString(),
         startingBlock: 3628800,
       };
+    default:
+      return {
+        srcAddress: 'aEuGkN4A4oUQaWKqfTTR42EcpxvsjEYfESWgUy6fhcrYzgU', // ALICE_STASH
+        perBlock: '0',
+        startingBlock: 1,
+      };
   }
-
-  return {
-    srcAddress: '',
-    preBlock: '0',
-    startingBlock: 1,
-  };
 };
 
 const makeKeyring = (): AddressOrPair => {

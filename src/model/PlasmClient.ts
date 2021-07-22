@@ -15,6 +15,8 @@ const makeEndpoint = (chain: ChainType): string => {
       return 'wss://rpc.shiden.plasmnet.io/';
     case 'polkadot':
       return 'wss://rpc.plasmnet.io/';
+    default:
+      return 'ws://127.0.0.1:9944';
   }
 };
 
@@ -26,12 +28,14 @@ const makePlasmTypes = (chain: ChainType): RegistryTypes => {
       return typeDefs.plasmCollatorDefinitions as RegistryTypes;
     case 'polkadot':
       return typeDefs.plasmDefinitions as RegistryTypes;
+    default:
+      return typeDefs.dustyDefinitions as RegistryTypes;
   }
 };
 
 export type VestingConfig = {
   srcAddress: string;
-  preBlock: string;
+  perBlock: string;
   startingBlock: number;
 };
 
@@ -72,7 +76,7 @@ export default class PlasmClient {
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     const ret = this._api?.tx.vesting.forceVestedTransfer(vestingConfig.srcAddress, dest, {
       locked: balance,
-      perBlock: vestingConfig.preBlock,
+      perBlock: vestingConfig.perBlock,
       startingBlock: vestingConfig.startingBlock,
     });
     if (ret) return ret;

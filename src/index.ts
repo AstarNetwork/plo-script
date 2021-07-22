@@ -12,7 +12,7 @@ const argv = yargs
   })
   .option('chain', {
     alias: 'c',
-    choices: ['kusama', 'polkadot', 'rococo'],
+    choices: ['kusama', 'polkadot', 'rococo', 'local'],
     description: 'kind of network',
   });
 
