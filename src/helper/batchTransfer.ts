@@ -37,9 +37,8 @@ export const batchTransfer = async (rewards: Reward[]) => {
   await waitReady();
   console.log('batchTransfer!');
   const client = new PlasmClient(Config.chainType, makeKeyring());
-  console.log('client0:', client);
   await client.setup();
-  console.log('client1:', client);
+  // TODO: Every 100 txs.
   const txs = rewards.map((reward) =>
     client.vestedTransfer(reward.account_id, reward.amount, makeVestedConfig(Config.chainType, reward.amount)),
   );

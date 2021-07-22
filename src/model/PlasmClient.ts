@@ -1,6 +1,6 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { ChainType } from './ChainType';
-import typeDefs from '@plasm/types';
+import { dustyDefinitions, plasmCollatorDefinitions, plasmDefinitions } from '@plasm/types/dist/networkSpecs';
 import type { RegistryTypes, ISubmittableResult } from '@polkadot/types/types';
 import BigNumber from 'bignumber.js';
 import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
@@ -23,13 +23,13 @@ const makeEndpoint = (chain: ChainType): string => {
 const makePlasmTypes = (chain: ChainType): RegistryTypes => {
   switch (chain) {
     case 'rococo':
-      return typeDefs.dustyDefinitions as RegistryTypes;
+      return dustyDefinitions as RegistryTypes;
     case 'kusama':
-      return typeDefs.plasmCollatorDefinitions as RegistryTypes;
+      return plasmCollatorDefinitions as RegistryTypes;
     case 'polkadot':
-      return typeDefs.plasmDefinitions as RegistryTypes;
+      return plasmDefinitions as RegistryTypes;
     default:
-      return typeDefs.dustyDefinitions as RegistryTypes;
+      return dustyDefinitions as RegistryTypes;
   }
 };
 
@@ -56,7 +56,6 @@ export default class PlasmClient {
       provider: this._provider,
       types: {
         ...types,
-        Address: 'GenericAddress',
         Keys: 'SessionKeys4',
       },
     });
@@ -75,10 +74,11 @@ export default class PlasmClient {
     vestingConfig: VestingConfig,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     const ret = this._api?.tx.vesting.forceVestedTransfer(vestingConfig.srcAddress, dest, {
-      locked: balance,
+      locked: balance.toString(),
       perBlock: vestingConfig.perBlock,
       startingBlock: vestingConfig.startingBlock,
     });
+    console.log('vestedTransfer:', ret);
     if (ret) return ret;
     throw 'Undefined vested transfe';
   }
