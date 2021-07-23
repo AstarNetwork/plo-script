@@ -1,9 +1,10 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { ChainType } from './ChainType';
-import typeDefs from '@plasm/types';
-import type { RegistryTypes, ISubmittableResult } from '@polkadot/types/types';
+import { dustyDefinitions, plasmCollatorDefinitions, plasmDefinitions } from '@plasm/types/dist/networkSpecs';
+import type { RegistryTypes, ISubmittableResult, IKeyringPair } from '@polkadot/types/types';
 import BigNumber from 'bignumber.js';
 import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
+import { SignerOptions } from '@polkadot/api/submittable/types';
 
 const AUTO_CONNECT_MS = 10_000; // [ms]
 
@@ -15,22 +16,27 @@ const makeEndpoint = (chain: ChainType): string => {
       return 'wss://rpc.shiden.plasmnet.io/';
     case 'polkadot':
       return 'wss://rpc.plasmnet.io/';
+    default:
+      return 'ws://127.0.0.1:9944';
   }
 };
 
 const makePlasmTypes = (chain: ChainType): RegistryTypes => {
   switch (chain) {
     case 'rococo':
-      return typeDefs.dustyDefinitions as RegistryTypes;
+      return dustyDefinitions as RegistryTypes;
     case 'kusama':
-      return typeDefs.plasmCollatorDefinitions as RegistryTypes;
+      return plasmCollatorDefinitions as RegistryTypes;
     case 'polkadot':
-      return typeDefs.plasmDefinitions as RegistryTypes;
+      return plasmDefinitions as RegistryTypes;
+    default:
+      return dustyDefinitions as RegistryTypes;
   }
 };
 
 export type VestingConfig = {
-  preBlock: string;
+  srcAddress: string;
+  perBlock: string;
   startingBlock: number;
 };
 
@@ -51,11 +57,14 @@ export default class PlasmClient {
       provider: this._provider,
       types: {
         ...types,
-        Address: 'GenericAddress',
         Keys: 'SessionKeys4',
       },
     });
     return this._api.isReady;
+  }
+
+  public async nonce(): Promise<number | undefined> {
+    return (await this._api?.query.system.account((this._account as IKeyringPair).address))?.nonce.toNumber();
   }
 
   public batch(txs: SubmittableExtrinsic<'promise', ISubmittableResult>[]) {
@@ -65,20 +74,34 @@ export default class PlasmClient {
   }
 
   public vestedTransfer(
-    address: string,
+    dest: string,
     balance: BigNumber,
     vestingConfig: VestingConfig,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    const ret = this._api?.tx.vesting.vestedTransfer(address, {
-      locked: balance,
-      perBlock: vestingConfig.preBlock,
+    console.log(
+      'vestedTransfer:',
+      vestingConfig.srcAddress,
+      dest,
+      balance.toString(),
+      vestingConfig.perBlock,
+      vestingConfig.startingBlock.toString(),
+    );
+    const ret = this._api?.tx.vesting.forceVestedTransfer(vestingConfig.srcAddress, dest, {
+      locked: balance.toString(),
+      perBlock: vestingConfig.perBlock,
       startingBlock: vestingConfig.startingBlock,
     });
     if (ret) return ret;
     throw 'Undefined vested transfe';
   }
 
-  public async signAndSend(tx: SubmittableExtrinsic<'promise', ISubmittableResult>) {
-    return await tx.signAndSend(this._account);
+  public sudo(tx: SubmittableExtrinsic<'promise', ISubmittableResult>) {
+    const ret = this._api?.tx.sudo.sudo(tx);
+    if (ret) return ret;
+    throw 'Undefined sudo';
+  }
+
+  public async signAndSend(tx: SubmittableExtrinsic<'promise', ISubmittableResult>, options?: Partial<SignerOptions>) {
+    return await tx.signAndSend(this._account, options);
   }
 }

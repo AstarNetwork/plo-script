@@ -16,5 +16,11 @@
     "auctionJSONPath": "report/cache-polkadot-auction.json",
     "crowdloanJSONPath": "report/cache-polkadot-crowdloan.json",
     "rewardsJSONPath": "report/cache-polkadot-rewards.json"
+  },
+  "local": {
+    "phrase": "//Alice",
+    "auctionJSONPath": "report/cache-kusama-auction.json",
+    "crowdloanJSONPath": "report/cache-kusama-crowdloan.json",
+    "rewardsJSONPath": "report/cache-kusama-rewards.json"
   }
 }
