@@ -1,9 +1,10 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { ChainType } from './ChainType';
 import { dustyDefinitions, plasmCollatorDefinitions, plasmDefinitions } from '@plasm/types/dist/networkSpecs';
-import type { RegistryTypes, ISubmittableResult } from '@polkadot/types/types';
+import type { RegistryTypes, ISubmittableResult, IKeyringPair } from '@polkadot/types/types';
 import BigNumber from 'bignumber.js';
 import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
+import { SignerOptions } from '@polkadot/api/submittable/types';
 
 const AUTO_CONNECT_MS = 10_000; // [ms]
 
@@ -62,6 +63,10 @@ export default class PlasmClient {
     return this._api.isReady;
   }
 
+  public async nonce(): Promise<number | undefined> {
+    return (await this._api?.query.system.account((this._account as IKeyringPair).address))?.nonce.toNumber();
+  }
+
   public batch(txs: SubmittableExtrinsic<'promise', ISubmittableResult>[]) {
     const ret = this._api?.tx.utility.batchAll(txs);
     if (ret) return ret;
@@ -73,12 +78,19 @@ export default class PlasmClient {
     balance: BigNumber,
     vestingConfig: VestingConfig,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    console.log(
+      'vestedTransfer:',
+      vestingConfig.srcAddress,
+      dest,
+      balance.toString(),
+      vestingConfig.perBlock,
+      vestingConfig.startingBlock.toString(),
+    );
     const ret = this._api?.tx.vesting.forceVestedTransfer(vestingConfig.srcAddress, dest, {
       locked: balance.toString(),
       perBlock: vestingConfig.perBlock,
       startingBlock: vestingConfig.startingBlock,
     });
-    console.log('vestedTransfer:', ret);
     if (ret) return ret;
     throw 'Undefined vested transfe';
   }
@@ -89,7 +101,7 @@ export default class PlasmClient {
     throw 'Undefined sudo';
   }
 
-  public async signAndSend(tx: SubmittableExtrinsic<'promise', ISubmittableResult>) {
-    return await tx.signAndSend(this._account);
+  public async signAndSend(tx: SubmittableExtrinsic<'promise', ISubmittableResult>, options?: Partial<SignerOptions>) {
+    return await tx.signAndSend(this._account, options);
   }
 }

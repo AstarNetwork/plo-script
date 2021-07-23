@@ -6,6 +6,9 @@ import { ChainType } from '../model/ChainType';
 import { Config } from '../model/Config';
 import PlasmClient, { VestingConfig } from '../model/PlasmClient';
 import { Reward } from '../model/Reward';
+import { setTimeout as sleep } from 'timers/promises';
+
+const CHUNK = 100;
 
 const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig => {
   switch (chain) {
@@ -16,14 +19,14 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
       // 1 month = 403200 blocks
       return {
         srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
-        perBlock: reward.div(3628800).toFixed().toString(),
+        perBlock: reward.div(3628800).toFixed(18).toString(),
         startingBlock: 3628800,
       };
     default:
       return {
         srcAddress: 'aEuGkN4A4oUQaWKqfTTR42EcpxvsjEYfESWgUy6fhcrYzgU', // ALICE_STASH
-        perBlock: '0',
-        startingBlock: 1,
+        perBlock: reward.div(3628800).toFixed(15).toString(),
+        startingBlock: 3628800,
       };
   }
 };
@@ -38,11 +41,23 @@ export const batchTransfer = async (rewards: Reward[]) => {
   console.log('batchTransfer!');
   const client = new PlasmClient(Config.chainType, makeKeyring());
   await client.setup();
-  // TODO: Every 100 txs.
-  const txs = rewards.map((reward) =>
-    client.vestedTransfer(reward.account_id, reward.amount, makeVestedConfig(Config.chainType, reward.amount)),
-  );
-  const batchTx = client.sudo(client.batch(txs));
-  const result = await client.signAndSend(batchTx);
-  console.log('finished batch result:', result);
+  let nonce = (await client.nonce()) ?? 0;
+  // Every CHUNK txs.
+  for (let i = 0; i < rewards.length; i += CHUNK) {
+    const chunk_rewards = rewards.slice(i, Math.min(i + CHUNK, rewards.length));
+    const txs = chunk_rewards.map((reward) =>
+      client.vestedTransfer(reward.account_id, reward.amount, makeVestedConfig(Config.chainType, reward.amount)),
+    );
+    const batchTx = client.sudo(client.batch(txs));
+    const result = await client.signAndSend(batchTx, { nonce });
+    console.log(
+      'batch result :',
+      nonce,
+      i / CHUNK,
+      chunk_rewards.map((reward) => [reward.account_id, reward.amount.toString()]),
+      result.toString(),
+    );
+    nonce += 1;
+    await sleep(10000); // 10s sleep
+  }
 };
