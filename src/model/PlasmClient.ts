@@ -94,7 +94,7 @@ export default class PlasmClient {
     );
     const ret = this._api?.tx.vesting.forceVestedTransfer(vestingConfig.srcAddress, dest, {
       locked: balance.toString(),
-      perBlock: vestingConfig.perBlock,
+      perBlock: vestingConfig.perBlock.toString(),
       startingBlock: vestingConfig.startingBlock,
     });
     if (ret) return ret;

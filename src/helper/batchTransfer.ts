@@ -19,13 +19,13 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
       // 1 month = 403200 blocks
       return {
         srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
-        perBlock: reward.div(3628800).toFixed(18).toString(),
+        perBlock: reward.div(3628800).toFixed(15).toString(),
         startingBlock: 3628800,
       };
     case 'shibuya':
       return {
         srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
-        perBlock: reward.div(3628800).toFixed(18).toString(),
+        perBlock: reward.div(3628800).toFixed(15).toString(),
         startingBlock: 3628800,
       };
     default:
