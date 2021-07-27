@@ -4,6 +4,8 @@ import neatCsv from 'neat-csv';
 import fs from 'fs';
 import stringify from 'csv-stringify/lib/sync';
 import path from 'path';
+import BigNumber from 'bignumber.js';
+import { FIEXD_DIGITS } from './batchTransfer';
 /**
  * a wrapper for node-fetch. Returns the JSON body of the response as string.
  * The body must be a JSON in order for this to work
@@ -70,4 +72,12 @@ export function promiseMap<T, V>(data: T[], fn: (d: T) => Promise<V>): Promise<V
       return fn(d);
     }),
   );
+}
+
+export function pow10(digits: number): BigNumber {
+  return new BigNumber(10).pow(digits);
+}
+
+export function toSDN(bn: BigNumber): string {
+  return bn.times(pow10(FIEXD_DIGITS)).toFixed(0).toString();
 }

@@ -9,7 +9,7 @@ import { Reward } from '../model/Reward';
 import { setTimeout as sleep } from 'timers/promises';
 
 const CHUNK = 100;
-const FIEXD_DIGITS = 15;
+export const FIEXD_DIGITS = 18;
 const ONE_MONTH_BLOCKS_PER_6_SECONDS = 403200;
 const NINE_MONTH_BLOCKS_PER_6_SECONDS = 3628800;
 
@@ -22,19 +22,19 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
       // 1 month = 403200 blocks
       return {
         srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
-        perBlock: reward.div(NINE_MONTH_BLOCKS_PER_6_SECONDS).toFixed(FIEXD_DIGITS).toString(),
+        perBlock: reward.div(NINE_MONTH_BLOCKS_PER_6_SECONDS),
         startingBlock: ONE_MONTH_BLOCKS_PER_6_SECONDS,
       };
     case 'shibuya':
       return {
         srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
-        perBlock: reward.div(NINE_MONTH_BLOCKS_PER_6_SECONDS).toFixed(FIEXD_DIGITS).toString(),
+        perBlock: reward.div(NINE_MONTH_BLOCKS_PER_6_SECONDS),
         startingBlock: ONE_MONTH_BLOCKS_PER_6_SECONDS,
       };
     default:
       return {
         srcAddress: 'aEuGkN4A4oUQaWKqfTTR42EcpxvsjEYfESWgUy6fhcrYzgU', // ALICE_STASH
-        perBlock: reward.div(NINE_MONTH_BLOCKS_PER_6_SECONDS).toFixed(FIEXD_DIGITS).toString(),
+        perBlock: reward.div(NINE_MONTH_BLOCKS_PER_6_SECONDS),
         startingBlock: ONE_MONTH_BLOCKS_PER_6_SECONDS,
       };
   }

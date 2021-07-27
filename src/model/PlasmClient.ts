@@ -5,6 +5,9 @@ import type { RegistryTypes, IKeyringPair } from '@polkadot/types/types';
 import BigNumber from 'bignumber.js';
 import { AddressOrPair, ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 import { SignerOptions } from '@polkadot/api/submittable/types';
+import BN from 'bn.js';
+import { FIEXD_DIGITS } from '../helper/batchTransfer';
+import { pow10, toSDN } from '../helper/utils';
 
 const AUTO_CONNECT_MS = 10_000; // [ms]
 
@@ -40,7 +43,7 @@ const makePlasmTypes = (chain: ChainType): RegistryTypes => {
 
 export type VestingConfig = {
   srcAddress: string;
-  perBlock: string;
+  perBlock: BigNumber;
   startingBlock: number;
 };
 
@@ -84,17 +87,19 @@ export default class PlasmClient {
     balance: BigNumber,
     vestingConfig: VestingConfig,
   ): SubmittableExtrinsic<ApiTypes> {
+    const lockedStr = toSDN(balance);
+    const perBlockStr = toSDN(vestingConfig.perBlock);
     console.log(
       'vestedTransfer:',
       vestingConfig.srcAddress,
       dest,
-      balance.toString(),
-      vestingConfig.perBlock,
+      lockedStr,
+      perBlockStr,
       vestingConfig.startingBlock.toString(),
     );
     const ret = this._api?.tx.vesting.forceVestedTransfer(vestingConfig.srcAddress, dest, {
-      locked: balance.toString(),
-      perBlock: vestingConfig.perBlock.toString(),
+      locked: lockedStr,
+      perBlock: perBlockStr,
       startingBlock: vestingConfig.startingBlock,
     });
     if (ret) return ret;
