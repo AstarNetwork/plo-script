@@ -61,6 +61,7 @@ export default class PlasmClient {
       provider: this._provider,
       types: {
         ...types,
+        AccountInfo: 'AccountInfoWithTripleRefCount',
         Keys: 'SessionKeys4',
       },
     });
