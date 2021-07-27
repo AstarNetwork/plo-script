@@ -22,6 +22,12 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
         perBlock: reward.div(3628800).toFixed(18).toString(),
         startingBlock: 3628800,
       };
+    case 'shibuya':
+      return {
+        srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
+        perBlock: reward.div(3628800).toFixed(18).toString(),
+        startingBlock: 3628800,
+      };
     default:
       return {
         srcAddress: 'aEuGkN4A4oUQaWKqfTTR42EcpxvsjEYfESWgUy6fhcrYzgU', // ALICE_STASH
@@ -42,6 +48,7 @@ export const batchTransfer = async (rewards: Reward[]) => {
   const client = new PlasmClient(Config.chainType, makeKeyring());
   await client.setup();
   let nonce = (await client.nonce()) ?? 0;
+  const ret = [];
   // Every CHUNK txs.
   for (let i = 0; i < rewards.length; i += CHUNK) {
     const chunk_rewards = rewards.slice(i, Math.min(i + CHUNK, rewards.length));
@@ -50,6 +57,12 @@ export const batchTransfer = async (rewards: Reward[]) => {
     );
     const batchTx = client.sudo(client.batch(txs));
     const result = await client.signAndSend(batchTx, { nonce });
+    ret.push({
+      nonce,
+      chunk: i / CHUNK,
+      rewards: chunk_rewards.map((reward) => [reward.account_id, reward.amount.toString()]),
+      hash: result.toString(),
+    });
     console.log(
       'batch result :',
       nonce,
@@ -60,4 +73,5 @@ export const batchTransfer = async (rewards: Reward[]) => {
     nonce += 1;
     await sleep(10000); // 10s sleep
   }
+  return ret;
 };

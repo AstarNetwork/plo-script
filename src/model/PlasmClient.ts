@@ -16,6 +16,8 @@ const makeEndpoint = (chain: ChainType): string => {
       return 'wss://rpc.shiden.plasmnet.io/';
     case 'polkadot':
       return 'wss://rpc.plasmnet.io/';
+    case 'shibuya':
+      return 'wss://rpc.shibuya.plasmnet.io/';
     default:
       return 'ws://127.0.0.1:9944';
   }

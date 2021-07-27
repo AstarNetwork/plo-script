@@ -1,1 +1,1 @@
-export type ChainType = 'rococo' | 'kusama' | 'polkadot';
+export type ChainType = 'rococo' | 'kusama' | 'polkadot' | 'shibuya' | 'local';

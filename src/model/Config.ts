@@ -10,6 +10,7 @@ export class Config {
   public auctionJSONPath: string;
   public crowdloanJSONPath: string;
   public rewardsJSONPath: string;
+  public resultJSONPath: string;
   private constructor() {
     const jsonObj = JSON.parse(fs.readFileSync(PATH).toString());
     for (const key of Object.keys(jsonObj[Config.chainType])) {
