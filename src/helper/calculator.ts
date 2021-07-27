@@ -42,5 +42,7 @@ export default async (pathes: string[], chain: ChainType): Promise<Reward[]> => 
       return calcSDN(particpants, SDNCrowdloanParameter);
     case 'polkadot':
       return calcSDN(particpants, SDNCrowdloanParameter);
+    default:
+      return calcSDN(particpants, SDNCrowdloanParameter);
   }
 };

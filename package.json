@@ -40,11 +40,11 @@
     },
     "dependencies": {
         "@plasm/types": "^1.5.4-3",
-        "@polkadot/api": "4.12.2-20",
-        "@polkadot/keyring": "^6.6.2-18",
-        "@polkadot/types": "4.12.2-20",
-        "@polkadot/util": "^6.6.2-18",
-        "@polkadot/util-crypto": "^6.6.2-18",
+        "@polkadot/api": "5.2.1",
+        "@polkadot/keyring": "^7.0.3",
+        "@polkadot/types": "5.2.1",
+        "@polkadot/util": "^7.0.3",
+        "@polkadot/util-crypto": "^7.0.3",
         "@polkadot/wasm-crypto": "^4.1.2",
         "axios": "^0.21.1",
         "bignumber.js": "^9.0.1",
@@ -59,7 +59,7 @@
         "yargs": "^17.0.1"
     },
     "resolutions": {
-        "@polkadot/api": "4.12.2-20",
-        "@polkadot/types": "4.12.2-20"
+        "@polkadot/api": "5.2.1",
+        "@polkadot/types": "5.2.1"
     }
 }
