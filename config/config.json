@@ -28,7 +28,7 @@
     "resultJSONPath": "report/cache-local-tx-result.json"
   },
   "shibuya": {
-    "phrase": "dose code sail glory accuse sting share best engage because steak dress",
+    "phrase": "//Alice",
     "auctionJSONPath": "report/cache-kusama-auction.json",
     "crowdloanJSONPath": "report/cache-kusama-crowdloan.json",
     "rewardsJSONPath": "report/cache-kusama-rewards.json",
