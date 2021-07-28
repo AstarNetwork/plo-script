@@ -14,6 +14,7 @@ const ONE_MONCE = 28 * 24 * 60 * 60;
 const BLOCK_PER_SECOND = 12;
 const ONE_MONTH_BLOCKS_PER_12_SECONDS = ONE_MONCE / BLOCK_PER_SECOND;
 const TEN_MONTH_BLOCKS_PER_12_SECONDS = (10 * ONE_MONCE) / BLOCK_PER_SECOND;
+const ACTUAL_STARTING_BLOCK_SHIDEN = 200000;
 
 const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig => {
   switch (chain) {
@@ -22,10 +23,11 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
       // 12 second average block time.
       // so 10 month = 2016000 blocks
       // 1 month = 201600 blocks
+      // actual = 200000 block.
       return {
         srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
         perBlock: reward.div(TEN_MONTH_BLOCKS_PER_12_SECONDS),
-        startingBlock: ONE_MONTH_BLOCKS_PER_12_SECONDS,
+        startingBlock: ACTUAL_STARTING_BLOCK_SHIDEN,
       };
     case 'shibuya':
       return {
@@ -76,7 +78,7 @@ export const batchTransfer = async (rewards: Reward[]) => {
       result.toString(),
     );
     nonce += 1;
-    await sleep(10000); // 10s sleep
+    await sleep(15000); // 15s sleep
   }
   return ret;
 };
