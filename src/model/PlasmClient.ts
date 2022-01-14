@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import { AddressOrPair, ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 import { SignerOptions } from '@polkadot/api/submittable/types';
 import BN from 'bn.js';
-import { FIEXD_DIGITS } from '../helper/batchTransfer';
+import { FIXED_DIGITS } from '../helper/batchTransfer';
 import { pow10, toSDN } from '../helper/utils';
 
 const AUTO_CONNECT_MS = 10_000; // [ms]
@@ -18,11 +18,9 @@ const makeEndpoint = (chain: ChainType): string => {
     case 'kusama':
       return 'wss://rpc.shiden.plasmnet.io/';
     case 'polkadot':
-      return 'wss://rpc.plasmnet.io/';
+      return 'wss://ws.astar.bldnodes.org/';
     case 'shibuya':
       return 'wss://rpc.shibuya.plasmnet.io/';
-    case 'astar':
-      return 'wss://ws.astar.bldnodes.org/';
     default:
       return 'ws://127.0.0.1:9944';
   }
@@ -34,10 +32,8 @@ const makePlasmTypes = (chain: ChainType): RegistryTypes => {
       return dustyDefinitions as RegistryTypes;
     case 'kusama':
       return plasmCollatorDefinitions as RegistryTypes;
-    case 'astar':
-      return plasmCollatorDefinitions as RegistryTypes;
     case 'polkadot':
-      return plasmDefinitions as RegistryTypes;
+      return plasmCollatorDefinitions as RegistryTypes;
     case 'shibuya':
       return plasmCollatorDefinitions as RegistryTypes;
     default:

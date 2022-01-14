@@ -9,7 +9,7 @@ import { Reward } from '../model/Reward';
 import { setTimeout as sleep } from 'timers/promises';
 
 const CHUNK = 100;
-export const FIEXD_DIGITS = 18;
+export const FIXED_DIGITS = 18;
 const ONE_MONTH = 28 * 24 * 60 * 60;
 const BLOCK_PER_SECOND = 12;
 const ONE_MONTH_BLOCKS_PER_12_SECONDS = ONE_MONTH / BLOCK_PER_SECOND;
@@ -35,7 +35,7 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
         perBlock: reward.div(TEN_MONTH_BLOCKS_PER_12_SECONDS),
         startingBlock: ONE_MONTH_BLOCKS_PER_12_SECONDS,
       };
-    case 'astar':
+    case 'polkadot':
       return {
         srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
         perBlock: reward.div(TEN_MONTH_BLOCKS_PER_12_SECONDS),
