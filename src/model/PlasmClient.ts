@@ -21,6 +21,8 @@ const makeEndpoint = (chain: ChainType): string => {
       return 'wss://rpc.plasmnet.io/';
     case 'shibuya':
       return 'wss://rpc.shibuya.plasmnet.io/';
+    case 'astar':
+      return 'wss://ws.astar.bldnodes.org/';
     default:
       return 'ws://127.0.0.1:9944';
   }
@@ -31,6 +33,8 @@ const makePlasmTypes = (chain: ChainType): RegistryTypes => {
     case 'rococo':
       return dustyDefinitions as RegistryTypes;
     case 'kusama':
+      return plasmCollatorDefinitions as RegistryTypes;
+    case 'astar':
       return plasmCollatorDefinitions as RegistryTypes;
     case 'polkadot':
       return plasmDefinitions as RegistryTypes;

@@ -10,10 +10,10 @@ import { setTimeout as sleep } from 'timers/promises';
 
 const CHUNK = 100;
 export const FIEXD_DIGITS = 18;
-const ONE_MONCE = 28 * 24 * 60 * 60;
+const ONE_MONTH = 28 * 24 * 60 * 60;
 const BLOCK_PER_SECOND = 12;
-const ONE_MONTH_BLOCKS_PER_12_SECONDS = ONE_MONCE / BLOCK_PER_SECOND;
-const TEN_MONTH_BLOCKS_PER_12_SECONDS = (10 * ONE_MONCE) / BLOCK_PER_SECOND;
+const ONE_MONTH_BLOCKS_PER_12_SECONDS = ONE_MONTH / BLOCK_PER_SECOND;
+const TEN_MONTH_BLOCKS_PER_12_SECONDS = (10 * ONE_MONTH) / BLOCK_PER_SECOND;
 const ACTUAL_STARTING_BLOCK_SHIDEN = 200000;
 
 const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig => {
@@ -30,6 +30,12 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
         startingBlock: ACTUAL_STARTING_BLOCK_SHIDEN,
       };
     case 'shibuya':
+      return {
+        srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
+        perBlock: reward.div(TEN_MONTH_BLOCKS_PER_12_SECONDS),
+        startingBlock: ONE_MONTH_BLOCKS_PER_12_SECONDS,
+      };
+    case 'astar':
       return {
         srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
         perBlock: reward.div(TEN_MONTH_BLOCKS_PER_12_SECONDS),
