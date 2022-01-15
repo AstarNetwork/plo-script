@@ -38,6 +38,7 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
     case 'polkadot':
       return {
         srcAddress: 'aXNWfAMUV3YjRoGgceJJpieqzteL4jUWR7LM4xZfHfCGDfQ',
+        // todo: set the vesting duration here
         perBlock: reward.div(TEN_MONTH_BLOCKS_PER_12_SECONDS),
         startingBlock: ONE_MONTH_BLOCKS_PER_12_SECONDS,
       };

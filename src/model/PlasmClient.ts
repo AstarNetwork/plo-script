@@ -33,11 +33,11 @@ const makePlasmTypes = (chain: ChainType): RegistryTypes => {
     case 'kusama':
       return plasmCollatorDefinitions as RegistryTypes;
     case 'polkadot':
-      return plasmCollatorDefinitions as RegistryTypes;
+      return {};
     case 'shibuya':
       return plasmCollatorDefinitions as RegistryTypes;
     default:
-      return dustyDefinitions as RegistryTypes;
+      return {};
   }
 };
 
