@@ -7,7 +7,7 @@ import { AddressOrPair, ApiTypes, SubmittableExtrinsic } from '@polkadot/api/typ
 import { SignerOptions } from '@polkadot/api/submittable/types';
 import BN from 'bn.js';
 import { FIXED_DIGITS } from '../helper/batchTransfer';
-import { pow10, toSDN } from '../helper/utils';
+import { getVestingSchedule, pow10, toSDN } from '../helper/utils';
 
 const AUTO_CONNECT_MS = 10_000; // [ms]
 
@@ -94,20 +94,19 @@ export default class PlasmClient {
     balance: BigNumber,
     vestingConfig: VestingConfig,
   ): SubmittableExtrinsic<ApiTypes> {
-    const lockedStr = toSDN(balance);
-    const perBlockStr = toSDN(vestingConfig.perBlock);
+    const { perBlock, locked, startingBlock } = getVestingSchedule(vestingConfig, balance);
     console.log(
       'vestedTransfer:',
       vestingConfig.srcAddress,
       dest,
-      lockedStr,
-      perBlockStr,
+      locked,
+      perBlock,
       vestingConfig.startingBlock.toString(),
     );
     const ret = this._api?.tx.vesting.forceVestedTransfer(vestingConfig.srcAddress, dest, {
-      locked: lockedStr,
-      perBlock: perBlockStr,
-      startingBlock: vestingConfig.startingBlock,
+      locked,
+      perBlock,
+      startingBlock,
     });
     if (ret) return ret;
     throw 'Undefined vested transfer';

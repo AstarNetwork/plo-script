@@ -6,6 +6,7 @@ import stringify from 'csv-stringify/lib/sync';
 import path from 'path';
 import BigNumber from 'bignumber.js';
 import { FIXED_DIGITS } from './batchTransfer';
+import { VestingConfig } from '../model/PlasmClient';
 /**
  * a wrapper for node-fetch. Returns the JSON body of the response as string.
  * The body must be a JSON in order for this to work
@@ -80,4 +81,14 @@ export function pow10(digits: number): BigNumber {
 
 export function toSDN(bn: BigNumber): string {
   return bn.times(pow10(FIXED_DIGITS)).toFixed(0).toString();
+}
+
+export function getVestingSchedule(vestingConfig: VestingConfig, balance: BigNumber) {
+  const lockedStr = toSDN(balance);
+  const perBlockStr = toSDN(vestingConfig.perBlock);
+  return {
+    locked: lockedStr,
+    perBlock: perBlockStr,
+    startingBlock: vestingConfig.startingBlock,
+  };
 }

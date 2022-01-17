@@ -7,6 +7,7 @@ import { Config } from '../model/Config';
 import PlasmClient, { VestingConfig } from '../model/PlasmClient';
 import { Reward } from '../model/Reward';
 import { setTimeout as sleep } from 'timers/promises';
+import { getVestingSchedule } from './utils';
 
 const CHUNK = 100;
 export const FIXED_DIGITS = 18;
@@ -100,12 +101,12 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
         startingBlock: ONE_MONTH_BLOCKS_PER_12_SECONDS,
       };
     case 'polkadot':
-      return astar90PercentDistribution(reward);
+      return lockdropTier1ShortVesting(reward);
     default:
       return {
-        srcAddress: 'ZAP5o2BjWAo5uoKDE6b6Xkk4Ju7k6bDu24LNjgZbfM3iyiR', // ALICE_STASH
-        perBlock: reward.div(TEN_MONTH_BLOCKS_PER_12_SECONDS),
-        startingBlock: ONE_MONTH_BLOCKS_PER_12_SECONDS,
+        srcAddress: 'ZAP5o2BjWAo5uoKDE6b6Xkk4Ju7k6bDu24LNjgZbfM3iyiR', // BOB
+        perBlock: reward.div(LOCKDROP_REWARD_VESTING_TIER1),
+        startingBlock: ACTUAL_STARTING_BLOCK_ASTAR,
       };
   }
 };
@@ -167,26 +168,30 @@ export const forceVestingTransfer = async (rewards: Reward[]) => {
   // Every CHUNK txs.
   for (let i = 0; i < rewards.length; i += CHUNK) {
     const chunk_rewards = rewards.slice(i, Math.min(i + CHUNK, rewards.length));
-    const txs = chunk_rewards.map((reward) =>
-      client.vestedTransfer(reward.account_id, reward.amount, makeVestedConfig(Config.chainType, reward.amount)),
-    );
+
+    const txs = chunk_rewards.map((reward) => {
+      const vestingConfig = makeVestedConfig(Config.chainType, reward.amount);
+      return client.vestedTransfer(reward.account_id, reward.amount, vestingConfig);
+    });
     const batchTx = client.sudo(client.batch(txs));
     const result = await client.signAndSend(batchTx, { nonce });
+    const rewardData = chunk_rewards.map((reward) => [
+      reward.account_id,
+      reward.amount.toString(),
+      getVestingSchedule(makeVestedConfig(Config.chainType, reward.amount), reward.amount),
+    ]);
+
     ret.push({
       nonce,
       chunk: i / CHUNK,
-      rewards: chunk_rewards.map((reward) => [reward.account_id, reward.amount.toString()]),
+      rewards: rewardData,
       hash: result.toString(),
     });
-    console.log(
-      'batch result :',
-      nonce,
-      i / CHUNK,
-      chunk_rewards.map((reward) => [reward.account_id, reward.amount.toString()]),
-      result.toString(),
-    );
+
+    console.log('batch result :', nonce, i / CHUNK, JSON.stringify(rewardData), result.toString());
     nonce += 1;
-    await sleep(15000); // 15s sleep
+    //await sleep(15000); // 15s sleep
+    await sleep(5000);
   }
   return ret;
 };
