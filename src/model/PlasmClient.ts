@@ -18,7 +18,7 @@ const makeEndpoint = (chain: ChainType): string => {
     case 'kusama':
       return 'wss://rpc.shiden.plasmnet.io/';
     case 'polkadot':
-      return 'wss://ws.astar.bldnodes.org/';
+      return 'wss://astar.api.onfinality.io/public-ws';
     case 'shibuya':
       return 'wss://rpc.shibuya.plasmnet.io/';
     default:
@@ -64,8 +64,6 @@ export default class PlasmClient {
       provider: this._provider,
       types: {
         ...types,
-        AccountInfo: 'AccountInfoWithTripleRefCount',
-        Keys: 'SessionKeys4',
       },
     });
     return this._api.isReady;
@@ -80,6 +78,15 @@ export default class PlasmClient {
     const ret = this._api?.tx.utility.batchAll(txs);
     if (ret) return ret;
     throw 'Undefined batch all';
+  }
+
+  public forceTransfer(sourceAddress: string, dest: string, balance: BigNumber): SubmittableExtrinsic<ApiTypes> {
+    const amount = toSDN(balance);
+    console.log('vestedTransfer:', sourceAddress, dest, amount);
+
+    const ret = this._api?.tx.balances.forceTransfer(sourceAddress, dest, amount);
+    if (ret) return ret;
+    throw 'Undefined vested transfer';
   }
 
   public vestedTransfer(
@@ -103,7 +110,7 @@ export default class PlasmClient {
       startingBlock: vestingConfig.startingBlock,
     });
     if (ret) return ret;
-    throw 'Undefined vested transfe';
+    throw 'Undefined vested transfer';
   }
 
   public sudo(tx: SubmittableExtrinsic<ApiTypes>) {

@@ -24,7 +24,7 @@
     "phrase": "//Alice",
     "auctionJSONPath": "report/cache-kusama-auction.json",
     "crowdloanJSONPath": "report/cache-kusama-crowdloan.json",
-    "rewardsJSONPath": "report/cache-kusama-rewards.json",
+    "rewardsJSONPath": "report/cache-polkadot-rewards.json",
     "resultJSONPath": "report/cache-local-tx-result.json"
   },
   "shibuya": {
