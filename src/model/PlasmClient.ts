@@ -82,6 +82,9 @@ export default class PlasmClient {
 
   public forceTransfer(sourceAddress: string, dest: string, balance: BigNumber): SubmittableExtrinsic<ApiTypes> {
     const amount = toSDN(balance);
+    if (!sourceAddress) {
+      throw new Error('Transfer target address was not defined!');
+    }
     console.log('vestedTransfer:', sourceAddress, dest, amount);
 
     const ret = this._api?.tx.balances.forceTransfer(sourceAddress, dest, amount);
@@ -103,6 +106,9 @@ export default class PlasmClient {
       perBlock,
       vestingConfig.startingBlock.toString(),
     );
+    if (!vestingConfig.srcAddress) {
+      throw new Error('Vesting target address was not defined!');
+    }
     const ret = this._api?.tx.vesting.forceVestedTransfer(vestingConfig.srcAddress, dest, {
       locked,
       perBlock,

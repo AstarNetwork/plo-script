@@ -49,6 +49,15 @@ const astar90PercentDistribution = (reward: BigNumber) => {
   };
 };
 
+// investor
+const sevenMonthVesting = (reward: BigNumber) => {
+  return {
+    srcAddress: 'bWEvcqtXE8GTQCQhB5292snM7EBYUpsehHEMCt1whG5MXbx',
+    perBlock: reward.div(LOCKDROP_REWARD_VESTING_TIER1),
+    startingBlock: ACTUAL_STARTING_BLOCK_ASTAR,
+  };
+};
+
 const lockdropTier1ShortVesting = (reward: BigNumber) => {
   return {
     srcAddress: 'b6pba6jZYphJro4v7xf8H93K8Xei4WtwtL2hAtawJcJnpAZ',
@@ -101,12 +110,12 @@ const makeVestedConfig = (chain: ChainType, reward: BigNumber): VestingConfig =>
         startingBlock: ONE_MONTH_BLOCKS_PER_12_SECONDS,
       };
     case 'polkadot':
-      return lockdropTier1ShortVesting(reward);
+      return sevenMonthVesting(reward);
     default:
       return {
         srcAddress: 'ZAP5o2BjWAo5uoKDE6b6Xkk4Ju7k6bDu24LNjgZbfM3iyiR', // BOB
-        perBlock: reward.div(LOCKDROP_REWARD_VESTING_TIER1),
-        startingBlock: ACTUAL_STARTING_BLOCK_ASTAR,
+        perBlock: reward.div(TEN_MONTH_BLOCKS_PER_12_SECONDS),
+        startingBlock: ONE_MONTH_BLOCKS_PER_12_SECONDS,
       };
   }
 };
@@ -117,7 +126,7 @@ const makeKeyring = (): AddressOrPair => {
 };
 
 export const batchTransfer = async (rewards: Reward[]) => {
-  return await forceTransfer(rewards);
+  return await forceVestingTransfer(rewards);
 };
 
 export const forceTransfer = async (rewards: Reward[]) => {
@@ -160,7 +169,7 @@ export const forceTransfer = async (rewards: Reward[]) => {
 
 export const forceVestingTransfer = async (rewards: Reward[]) => {
   await waitReady();
-  console.log('batchTransfer!');
+  console.log('batchVestedTransfer!');
   const client = new PlasmClient(Config.chainType, makeKeyring());
   await client.setup();
   let nonce = (await client.nonce()) ?? 0;
