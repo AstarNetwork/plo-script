@@ -1,0 +1,8 @@
+{
+    "polkadot": "wss://rpc.polkadot.io",
+    "kusama": "wss://kusama-rpc.polkadot.io",
+    "astar": "wss://rpc.astar.network",
+    "shiden": "wss://rpc.shiden.astar.network",
+    "plasm": "wss://rpc.plasmnet.io",
+    "local": "ws://localhost:9944"
+}
